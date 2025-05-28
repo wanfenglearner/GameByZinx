@@ -1,2 +1,1 @@
-# GameByZinx
 使用Zinx框架实现游戏服务器业务
