@@ -23,6 +23,12 @@ public:
 
 	Ichannel* GetMsgSender(BytesMsg& _oBytes) ;
 
+
+private:
+
+	// 记录每个TCP连接信息(标识)
+	std::string m_tcpInfo;	
+
 };
 
 

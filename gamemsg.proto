@@ -1,0 +1,33 @@
+
+// 版本号
+syntax = "proto3";
+
+// 作用域
+package Game;
+
+// 消息ID
+enum MsgType{
+
+    TYPE_BEGIN = 0;
+
+    // 登录玩家ID和玩家姓名
+    TYPE_LOGIN_ID_NAME = 1;
+
+    // 聊天内容
+    TYPE_CHAT_CONTENT = 2;
+
+    // 新位置
+    TYPE_NEW_POSITION = 3;
+    
+    // 发送新的位置信息 (玩家ID，聊天内容/初始位置/动作（预留）/新位置)
+    TYPE_BROADCAST = 200;
+
+    // 下线玩家ID和玩家姓名
+    TYPE_LOGOUT_ID_NAME = 201;
+
+    // 周围玩家们的位置
+    TYPE_AROUND_POSITION = 202;
+
+}
+
+
