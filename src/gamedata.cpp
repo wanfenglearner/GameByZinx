@@ -25,8 +25,40 @@ GameData::GameData(Game::MsgType type, google::protobuf::Message* message) {
 GameData::GameData(Game::MsgType type, const std::string msg) {
 
     this->setMsgType(type);
-    m_message->ParseFromString(msg);
 
+    switch (type)
+    {
+    case Game::MsgType::TYPE_LOGIN_ID_NAME:
+        m_message = new Game::SyncPid();
+        break;
+        
+    case Game::MsgType::TYPE_CHAT_CONTENT:
+        m_message = new Game::Talk();
+        break;
+
+    case Game::MsgType::TYPE_NEW_POSITION:
+        m_message = new Game::Position();
+        break;
+
+    case Game::MsgType::TYPE_BROADCAST:
+        m_message = new Game::BroadCast();
+        break;
+
+    case Game::MsgType::TYPE_LOGOUT_ID_NAME:
+        m_message = new Game::SyncPid();
+        break;        
+
+    case Game::MsgType::TYPE_AROUND_POSITION:
+        m_message = new Game::SyncPlayers();
+        break;
+
+    default:
+        break;
+    }
+
+    // 解析相应的字符串
+    m_message->ParseFromString(msg);
+    
 }
 
 // 设置和获取消息类型

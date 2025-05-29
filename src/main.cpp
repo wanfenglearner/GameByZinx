@@ -1,7 +1,9 @@
 #include "gamechannel.hpp"
+#include "gamedata.hpp"
 #include <memory>
 
 int main(int argc, char*argv[]) {
+
 
     if(argc < 2) {
         std::cout << "./*.exe port" << std::endl;
@@ -21,6 +23,9 @@ int main(int argc, char*argv[]) {
 
     // 结束框架
     ZinxKernel::ZinxKernelFini();
+
+
+
 
 
     return 0;

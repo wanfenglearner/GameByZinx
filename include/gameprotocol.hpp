@@ -15,8 +15,10 @@ public:
 	~GameProtocol() = default;
 
 
+	// 将原始数据转换成可以在内部互通的数据 消息格式: 消息大小(4字节) + 消息id(4字节) + 具体消息
 	UserData* raw2request(std::string _szInput) ;
 
+	// 将内部互通的数据换换成原始数据 消息格式: 消息大小(4字节) + 消息id(4字节) + 具体消息
 	std::string* response2raw(UserData& _oUserData) ;
 
 	Irole* GetMsgProcessor(UserDataMsg& _oUserDataMsg) ;
@@ -29,6 +31,8 @@ private:
 	// 记录每个TCP连接信息(标识)
 	std::string m_tcpInfo;	
 
+	// 记录总的接受的原始数据
+	std::string m_totalMsg;
 };
 
 
