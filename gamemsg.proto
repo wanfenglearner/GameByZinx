@@ -1,0 +1,89 @@
+
+// 版本号
+syntax = "proto3";
+
+// 作用域
+package Game;
+
+// 消息ID
+enum MsgType{
+
+    TYPE_BEGIN = 0;
+
+    // 登录玩家ID和玩家姓名
+    TYPE_LOGIN_ID_NAME = 1;
+
+    // 聊天内容
+    TYPE_CHAT_CONTENT = 2;
+
+    // 新位置
+    TYPE_NEW_POSITION = 3;
+    
+    // 发送新的位置信息 (玩家ID，聊天内容/初始位置/动作（预留）/新位置)
+    TYPE_BROADCAST = 200;
+
+    // 下线玩家ID和玩家姓名
+    TYPE_LOGOUT_ID_NAME = 201;
+
+    // 周围玩家们的位置
+    TYPE_AROUND_POSITION = 202;
+
+}
+
+// 1    玩家ID和玩家姓名
+message SyncPid{
+	int32 Pid=1;
+	bytes Username=2;
+}
+
+// 3    新位置
+message Position{
+	float X=1;
+	float Y=2;	
+	float Z=3;	
+	float V=4;
+	int32 BloodValue=5;
+}
+
+
+// 202  周围玩家们的位置
+message Player{
+	int32 Pid=1;
+	Position P=2;
+	bytes Username=3;
+}
+message SyncPlayers{
+	/*嵌套多个子消息类型Player的消息*/
+	repeated Player ps=1;
+}
+
+
+
+
+message MovePackage{
+	Position P=1;
+	int32 ActionData=2;
+}
+
+// 200  玩家ID，聊天内容/初始位置/动作（预留）/新位置
+message BroadCast{
+	int32 Pid=1;
+	int32 Tp=2;
+	/*根据Tp不同，Broadcast消息会包含：
+	  聊天内容(Content)或初始位置(P)或新位置P*/
+	oneof Data{
+		bytes Content=3;
+		Position P=4;
+		/*ActionData暂时预留*/
+		int32 ActionData=5;
+		}
+	bytes Username=6;
+}
+
+// 2    聊天内容
+message Talk{
+	bytes Content=1;
+}
+
+
+
