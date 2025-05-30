@@ -90,3 +90,20 @@ std::string GameData::serializeString() {
     return rStr;
 
 }
+
+
+//------------- 存储多条GameData消息的类---------------
+
+// 添加消息
+void MultiGameData::add(GameData* data) {
+
+    m_GameDataLists.push_back(data);
+
+}
+
+// 获得存储的多条消息
+std::list<GameData*>& MultiGameData::getGameDataLists() {
+
+    return m_GameDataLists;
+
+}

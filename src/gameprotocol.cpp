@@ -15,7 +15,8 @@ UserData* GameProtocol::raw2request(std::string _szInput)
 {
     // 因为TCP是流式传输协议, 那么每次的数据大小不一定是完整的
 
-    GameData* rMsg = nullptr;
+    // 可能包含多条请求消息
+    MultiGameData* multiMsg = new MultiGameData();
 
     // 先记录传入的数据
     m_totalMsg.append(_szInput);
@@ -25,11 +26,11 @@ UserData* GameProtocol::raw2request(std::string _szInput)
     while(m_totalMsg.size() > 8) {
             
         int msg_len = 0;
-        _szInput.copy((char*)&msg_len, sizeof(int32_t), 0);
-
+        m_totalMsg.copy((char*)&msg_len, sizeof(int32_t), 0);
+       
         // 消息id
         Game::MsgType msg_type;
-        _szInput.copy((char*)&msg_type, sizeof(int32_t), 4);
+        m_totalMsg.copy((char*)&msg_type, sizeof(int32_t), 4);
 
         // 当前记录总消息大小是否满足(>= 拿出的消息的大小)
         if((m_totalMsg.size() < (8 + msg_len)) || msg_len == 0) {
@@ -38,18 +39,32 @@ UserData* GameProtocol::raw2request(std::string _szInput)
         }
 
         // 具体的消息
-        std::string msgStr = _szInput.substr(8, msg_len);
-        rMsg = new GameData(msg_type, msgStr);
+        std::string msgStr = m_totalMsg.substr(8, msg_len);
+        GameData* msg  = new GameData(msg_type, msgStr);
+
+        // 将一条请求数据添加到多条消息类中
+        multiMsg->add(msg);
 
         // 删除拿出的数据
         m_totalMsg.erase(0, 8 + msg_len);
         
-        // 拿到消息 退出循环
-        break;
-
     }
 
-    return rMsg;
+    for(const auto& p : multiMsg->getGameDataLists()) {
+        
+       std::cout << p->getMessage()->Utf8DebugString() << std::endl;
+    }
+
+    // 测试聊天消息
+    Game::Talk* talkmsg = new Game::Talk();
+    talkmsg->set_content("hello");
+
+    GameData* gamedata = new GameData(Game::MsgType::TYPE_CHAT_CONTENT, talkmsg);
+
+    ZinxKernel::Zinx_SendOut(*gamedata, *this);
+
+
+    return multiMsg;
 }
 
 // 将内部互通的数据换换成原始数据 消息格式: 消息大小(4字节) + 消息id(4字节) + 具体消息
@@ -58,7 +73,6 @@ std::string* GameProtocol::response2raw(UserData& _oUserData)
     
     // 动态类型转换
     GET_REF2DATA(GameData, outMsg, _oUserData);
-    
     // 得到序列化的数据
     std::string msgStr = outMsg.serializeString();
 
@@ -69,13 +83,13 @@ std::string* GameProtocol::response2raw(UserData& _oUserData)
     Game::MsgType msg_type = outMsg.getMsgType();
     
     // 进行字符串拼接
-    std::string result_str;
+    std::string* result_str = new std::string();
 
-    result_str.insert(0, (char*)&msg_len, 4);
-    result_str.insert(4, (char*)&msg_type, 4);
-    result_str.append(msgStr);
+    result_str->insert(0, (char*)&msg_len, 4);
+    result_str->insert(4, (char*)&msg_type, 4);
+    result_str->append(msgStr);
 
-    return new std::string(result_str);
+    return result_str;
 
 }
 
@@ -88,4 +102,15 @@ Irole* GameProtocol::GetMsgProcessor(UserDataMsg& _oUserDataMsg)
 Ichannel* GameProtocol::GetMsgSender(BytesMsg& _oBytes)
 {
 
+    return m_gameChannel;
+}
+
+// 设置和获得本协议层绑定的通道层
+void GameProtocol::setGameChannel(Ichannel* channel) {
+
+    m_gameChannel = channel;
+}
+Ichannel* GameProtocol::getGameChannel() {
+
+    return m_gameChannel;
 }

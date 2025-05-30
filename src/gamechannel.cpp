@@ -32,13 +32,13 @@ AZinxHandler* GameChannel::GetInputNextStage(BytesMsg& _oInput)
 }
 
 // 设置和获得协议对象
-void GameChannel::setGameProtocol(GameProtocol* protocol) {
+void GameChannel::setGameProtocol(Iprotocol* protocol) {
     m_protocol = protocol;
 }
-GameProtocol* GameChannel::getGameProtocol() {
+
+Iprotocol* GameChannel::getGameProtocol() {
     return m_protocol;
 }
-
 
 
 //---------------- TCP链接工厂 ------------------
@@ -51,9 +51,13 @@ ZinxTcpData* GameConnFactory::CreateTcpDataChannel(int _fd)
     // 创建协议对象
     auto pprotocol = new GameProtocol();
 
-    // 将协议绑定到TCP连接对象中
+    // 将协议层绑定到通道层(TCP连接对象)
     pchannel->setGameProtocol(pprotocol);
 
+    // 将通道层绑定到协议层
+    pprotocol->setGameChannel(pchannel);
+
+    
     // 将协议对象添加到框架中
     ZinxKernel::Zinx_Add_Proto(*(pprotocol));
 

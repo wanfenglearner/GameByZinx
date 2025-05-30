@@ -5,6 +5,8 @@
 #include "gamemsg.pb.h"
 #include <google/protobuf/message.h>
 #include <string>
+#include <list>
+
 
 /*
     自定义用户消息, 方便在服务器和客户端进行传递消息
@@ -46,5 +48,22 @@ private:
 
 };
 
+
+// 存储多条GameData消息的类
+class MultiGameData : public UserData {
+
+public:
+
+	
+	// 添加消息
+	void add(GameData* data);
+
+	// 获得存储的多条消息
+	std::list<GameData*>& getGameDataLists();
+private:
+	// 存储多条消息
+	std::list<GameData*> m_GameDataLists;
+	
+};
 
 #endif 

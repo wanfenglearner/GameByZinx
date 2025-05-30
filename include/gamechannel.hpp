@@ -18,15 +18,14 @@ public:
 	AZinxHandler* GetInputNextStage(BytesMsg& _oInput);
 
 	// 设置和获得协议对象
-	void setGameProtocol(GameProtocol* protocol);
-	GameProtocol* getGameProtocol();
-
+	void setGameProtocol(Iprotocol* protocol);
+	Iprotocol* getGameProtocol();
 
 private:
 	int m_fd;
 	
 	// 存放协议通道
-	GameProtocol* m_protocol;
+	Iprotocol* m_protocol;
 
 };
 

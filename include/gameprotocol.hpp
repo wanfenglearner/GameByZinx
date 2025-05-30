@@ -25,6 +25,9 @@ public:
 
 	Ichannel* GetMsgSender(BytesMsg& _oBytes) ;
 
+	// 设置和获得本协议层绑定的通道层
+	void setGameChannel(Ichannel* channel);
+	Ichannel* getGameChannel();
 
 private:
 
@@ -33,6 +36,9 @@ private:
 
 	// 记录总的接受的原始数据
 	std::string m_totalMsg;
+
+	// 记录本协议层绑定的通道层
+	Ichannel* m_gameChannel;
 };
 
 
