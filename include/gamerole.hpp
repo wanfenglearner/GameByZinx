@@ -2,6 +2,7 @@
 #define __GAMEROLE_H__
 
 #include <zinx.h>
+#include "gamedata.hpp"
 
 
 /*
@@ -18,6 +19,7 @@ public:
 
 	bool Init() ;
 
+	// 处理消息的函数
 	UserData* ProcMsg(UserData& _poUserData) ;
 
 	void Fini() ;
