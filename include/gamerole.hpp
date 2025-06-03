@@ -22,6 +22,14 @@ public:
 
 	void Fini() ;
 
+
+	// 设置和获得协议对象
+	void setGameProtocol(Iprotocol* protocol);
+	Iprotocol* getGameProtocol();
+	
+private:
+	Iprotocol* m_gameProtocol;
+
 };
 
 

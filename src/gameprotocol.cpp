@@ -50,19 +50,6 @@ UserData* GameProtocol::raw2request(std::string _szInput)
         
     }
 
-    for(const auto& p : multiMsg->getGameDataLists()) {
-        
-       std::cout << p->getMessage()->Utf8DebugString() << std::endl;
-    }
-
-    // 测试聊天消息
-    Game::Talk* talkmsg = new Game::Talk();
-    talkmsg->set_content("hello");
-
-    GameData* gamedata = new GameData(Game::MsgType::TYPE_CHAT_CONTENT, talkmsg);
-
-    ZinxKernel::Zinx_SendOut(*gamedata, *this);
-
 
     return multiMsg;
 }
@@ -93,10 +80,11 @@ std::string* GameProtocol::response2raw(UserData& _oUserData)
 
 }
 
+// 设置消息的处理的role层
 Irole* GameProtocol::GetMsgProcessor(UserDataMsg& _oUserDataMsg)
 {
 
-    return nullptr;
+    return m_gameRole;
 }
 
 Ichannel* GameProtocol::GetMsgSender(BytesMsg& _oBytes)
@@ -113,4 +101,14 @@ void GameProtocol::setGameChannel(Ichannel* channel) {
 Ichannel* GameProtocol::getGameChannel() {
 
     return m_gameChannel;
+}
+
+// 设置和获得绑定的角色层
+void GameProtocol::setGameRole(Irole* role) {
+
+    m_gameRole = role;
+
+}
+Irole* GameProtocol::getGameRole() {   
+    return m_gameRole;
 }

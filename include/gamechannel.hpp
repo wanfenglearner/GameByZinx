@@ -3,6 +3,8 @@
 
 #include <ZinxTCP.h>
 #include "gameprotocol.hpp"
+#include "gamerole.hpp"
+
 
 /*
 *	游戏通道类  处理网络IO

@@ -51,15 +51,26 @@ ZinxTcpData* GameConnFactory::CreateTcpDataChannel(int _fd)
     // 创建协议对象
     auto pprotocol = new GameProtocol();
 
+    // 创建角色层
+    auto prole = new GameRole();
+
+
     // 将协议层绑定到通道层(TCP连接对象)
     pchannel->setGameProtocol(pprotocol);
-
     // 将通道层绑定到协议层
     pprotocol->setGameChannel(pchannel);
 
-    
+    // 将协议层绑定到角色层
+    prole->setGameProtocol(pprotocol);
+
+    // 将角色层绑定到协议层
+    pprotocol->setGameRole(prole);
+
     // 将协议对象添加到框架中
-    ZinxKernel::Zinx_Add_Proto(*(pprotocol));
+    ZinxKernel::Zinx_Add_Proto(*pprotocol);
+
+    // 将角色层添加到框架中
+    ZinxKernel::Zinx_Add_Role(*prole);
 
     return pchannel;
 }
