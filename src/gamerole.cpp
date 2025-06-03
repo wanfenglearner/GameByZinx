@@ -8,6 +8,7 @@ bool GameRole::Init()
 UserData* GameRole::ProcMsg(UserData& _poUserData)
 {
     return nullptr;
+    
 }
 
 void GameRole::Fini()
