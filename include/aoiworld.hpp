@@ -7,24 +7,22 @@
 #include <string>
 
 
-// 游戏玩家类
+// 游戏玩家类(纯虚函数)
 class Player {
 
 public:
+    Player() = default;
     Player(int x, int y, std::string name);
-    ~Player() = default;
+    virtual ~Player() = default;
 
-    // 设置和获得 X 坐标
-    void setX(int x);
-    int getX();
+    // 获得X坐标
+    virtual int getX() = 0;
 
-    // 设置和获得 Y 坐标
-    void setY(int y);
-    int getY();
+    // 获得Y坐标
+    virtual int getY() = 0;
 
-    // 设置和获得名字
-    void setName(std::string name);
-    std::string getName();
+    // 获得名字
+    virtual std::string getName() = 0;
 
 public:
     int m_x;
@@ -37,18 +35,17 @@ class Grid {
 
 public:
     // 添加玩家
-    void addPlayer(std::shared_ptr<Player> player);
+    void addPlayer(Player* player);
     
     // 删除玩家
-    void removePlayer(std::shared_ptr<Player> player);
+    void removePlayer(Player* player);
 
     // 获得所有玩家
-    std::list<std::shared_ptr<Player>> getAllPlayers();
-
+    std::list<Player*> getAllPlayers();
 
 private:
     // 存放该网格的所有玩家
-    std::list<std::shared_ptr<Player>> m_playerList;
+    std::list<Player*> m_playerList;
 };
 
 // 游戏世界矩阵类
@@ -61,13 +58,13 @@ public:
 
 
     // 向AOI矩阵中添加玩家
-    void addAOIPlayer(std::shared_ptr<Player> player);
+    void addAOIPlayer(Player* player);
 
     // 在AOI矩阵中删除玩家
-    void removeAOIPlayer(std::shared_ptr<Player> player);
+    void removeAOIPlayer(Player* player);
 
     // 获取周围玩家
-    std::list<std::shared_ptr<Player>> getAroundPlayer(std::shared_ptr<Player> player);
+    std::list<Player*> getAroundPlayer(Player* player);
 
 private:
     // 计算玩家所在的网格

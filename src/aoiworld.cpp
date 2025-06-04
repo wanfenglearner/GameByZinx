@@ -30,19 +30,17 @@ AOIWorld::~AOIWorld() {
 }
 
 // 向AOI矩阵中添加玩家
-void AOIWorld::addAOIPlayer(std::shared_ptr<Player> player) {
+void AOIWorld::addAOIPlayer(Player* player) {
 
     // 获得该玩家所在的网格id  
     int grid_id = calPlayerGrid(player->getX(), player->getY());
-
-    
     // 向该网格中添加元素
     m_gridList[grid_id].addPlayer(player);
-
 }
 
+
 // 在AOI矩阵中删除玩家
-void AOIWorld::removeAOIPlayer(std::shared_ptr<Player> player) {
+void AOIWorld::removeAOIPlayer(Player* player) {
 
     // 获得该玩家所在的网格id  
     int grid_id = calPlayerGrid(player->getX(), player->getY());
@@ -52,13 +50,12 @@ void AOIWorld::removeAOIPlayer(std::shared_ptr<Player> player) {
 }
 
 // 获取周围玩家
-std::list<std::shared_ptr<Player>> AOIWorld::getAroundPlayer(std::shared_ptr<Player> player) {
-
+std::list<Player*> AOIWorld::getAroundPlayer(Player* player) {
 
     // 获得该玩家所在的网格id 
     int grid_id = calPlayerGrid(player->getX(), player->getY());
 
-    std::list<std::shared_ptr<Player>> result_players;
+    std::list<Player*> result_players;
 
     // 周围8个相邻网格玩家的信息
     for(int i = 0; i < 8; ++i) {
@@ -88,19 +85,19 @@ int AOIWorld::calPlayerGrid(int x, int y) {
 // ----------------网格类----------------------
 
 // 添加玩家
-void Grid::addPlayer(std::shared_ptr<Player> player) {
+void Grid::addPlayer(Player* player) {
 
     m_playerList.push_back(player);
 }
 
 // 删除玩家
-void Grid::removePlayer(std::shared_ptr<Player> player) {
+void Grid::removePlayer(Player* player) {
 
     m_playerList.remove(player);
 }
 
 // 获得所有玩家
-std::list<std::shared_ptr<Player>> Grid::getAllPlayers() {
+std::list<Player*> Grid::getAllPlayers() {
     return m_playerList;
     
 }
@@ -108,37 +105,8 @@ std::list<std::shared_ptr<Player>> Grid::getAllPlayers() {
 // ----------------抽象游戏玩家类--------------
 Player::Player(int x, int y, std::string name)
 {
-    setX(x);
-    setY(y);
-    setName(name);
-}
-
-// 设置和获得 X 坐标
-void Player::setX(int x) {
-
     m_x = x;
-}
-int Player::getX() {
-
-    return m_x;
-}
-
-// 设置和获得 Y 坐标
-void Player::setY(int y) {
-
     m_y = y;
-}
-int Player::getY() {
-
-    return m_y;
-}
-
-// 设置和获得名字
-void Player::setName(std::string  name) {
-
     m_name = name;
 }
-std::string Player::getName() {
 
-    return m_name;
-}
