@@ -2,17 +2,19 @@
 #define __GAMEPROTOCOL_H__
 
 #include <zinx.h>
-
-
+#include "gamerole.hpp"
 /*
 *	游戏协议类 对请求和响应的数据进行处理
 */
 
+class GameChannel;
+class GameRole;
+
 class GameProtocol : public Iprotocol{
 
 public:
-	GameProtocol() = default;
-	~GameProtocol() = default;
+	GameProtocol();
+	~GameProtocol();
 
 
 	// 将原始数据转换成可以在内部互通的数据 消息格式: 消息大小(4字节) + 消息id(4字节) + 具体消息
@@ -28,12 +30,12 @@ public:
 	Ichannel* GetMsgSender(BytesMsg& _oBytes) ;
 
 	// 设置和获得本协议层绑定的通道层
-	void setGameChannel(Ichannel* channel);
-	Ichannel* getGameChannel();
+	void setGameChannel(GameChannel* channel);
+	GameChannel* getGameChannel();
 
 	// 设置和获得绑定的角色层
-	void setGameRole(Irole* role);
-	Irole* getGameRole();
+	void setGameRole(GameRole* role);
+	GameRole* getGameRole();
 
 private:
 
@@ -44,10 +46,10 @@ private:
 	std::string m_totalMsg;
 
 	// 记录本协议层绑定的通道层
-	Ichannel* m_gameChannel;
+	GameChannel* m_gameChannel;
 
 	// 记录本协议层绑定的角色层
-	Irole* m_gameRole;
+	GameRole* m_gameRole;
 
 
 };

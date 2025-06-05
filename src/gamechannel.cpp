@@ -1,4 +1,5 @@
 #include "gamechannel.hpp"
+
 #include <string>
 
 static bool Debug = true;
@@ -11,7 +12,7 @@ static void printMsg(std::string msg) {
 //---------------- 产生TCP连接的类 ------------------
 GameChannel::GameChannel(int fd):
     ZinxTcpData(fd),
-    m_protocol(nullptr),
+    m_gameProtocol(nullptr),
     m_fd(fd)
 {
     if(Debug) {
@@ -23,23 +24,37 @@ GameChannel::~GameChannel() {
     if(Debug) {
         printMsg("TCP断开连接 fd = " + std::to_string(m_fd));
     }
+    
+    // 将绑定的协议层从框架中删除并且析构
+    if(m_gameProtocol != nullptr) {
+        // 摘除框架
+        ZinxKernel::Zinx_Del_Proto(*m_gameProtocol);
 
+        // 调用析构函数
+        delete m_gameProtocol;
+    }
 }
 
 AZinxHandler* GameChannel::GetInputNextStage(BytesMsg& _oInput)
 {
-    return this->getGameProtocol();
+    return m_gameProtocol;
 }
 
 // 设置和获得协议对象
-void GameChannel::setGameProtocol(Iprotocol* protocol) {
-    m_protocol = protocol;
+void GameChannel::setGameProtocol(GameProtocol* protocol) {
+    m_gameProtocol = protocol;
 }
 
-Iprotocol* GameChannel::getGameProtocol() {
-    return m_protocol;
+GameProtocol* GameChannel::getGameProtocol() {
+    return m_gameProtocol;
 }
 
+// 得到连接的fd
+int GameChannel::getFd() {
+
+    return m_fd;
+
+}
 
 //---------------- TCP链接工厂 ------------------
 ZinxTcpData* GameConnFactory::CreateTcpDataChannel(int _fd)

@@ -1,5 +1,6 @@
 #include "gameprotocol.hpp"
 #include "gamedata.hpp"
+#include "gamechannel.hpp"
 
 
 static bool Debug = true;
@@ -9,6 +10,21 @@ static void printMsg(std::string msg) {
     std::cout << msg << std::endl;
 }
 
+
+GameProtocol::GameProtocol() {
+
+}
+GameProtocol::~GameProtocol() {
+    
+    // 将绑定的角色层从框架中删除并且析构
+    if(m_gameRole != nullptr) {
+
+        // 在框架中删除
+        ZinxKernel::Zinx_Del_Role(*m_gameRole);
+        
+        delete m_gameRole;
+    }
+}
 
 // 将原始数据转换成可以在内部互通的数据 消息格式: 消息大小(4字节) + 消息id(4字节) + 具体消息
 UserData* GameProtocol::raw2request(std::string _szInput)
@@ -69,6 +85,7 @@ std::string* GameProtocol::response2raw(UserData& _oUserData)
     // 得到消息id
     Game::MsgType msg_type = outMsg.getMsgType();
     
+    //std::cout << "response2raw:>> " << "msg:" << msgStr << " msg_len:" << msg_len << "msg_type:" << msg_type << std::endl; 
     // 进行字符串拼接
     std::string* result_str = new std::string();
 
@@ -94,21 +111,21 @@ Ichannel* GameProtocol::GetMsgSender(BytesMsg& _oBytes)
 }
 
 // 设置和获得本协议层绑定的通道层
-void GameProtocol::setGameChannel(Ichannel* channel) {
+void GameProtocol::setGameChannel(GameChannel* channel) {
 
     m_gameChannel = channel;
 }
-Ichannel* GameProtocol::getGameChannel() {
+GameChannel* GameProtocol::getGameChannel() {
 
     return m_gameChannel;
 }
 
 // 设置和获得绑定的角色层
-void GameProtocol::setGameRole(Irole* role) {
+void GameProtocol::setGameRole(GameRole* role) {
 
     m_gameRole = role;
 
 }
-Irole* GameProtocol::getGameRole() {   
+GameRole* GameProtocol::getGameRole() {   
     return m_gameRole;
 }

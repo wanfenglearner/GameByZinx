@@ -1,6 +1,7 @@
 #include "aoiworld.hpp"
 #include <iostream>
 
+
 // -----------------游戏世界矩阵类-----------------
 
 AOIWorld::AOIWorld() { 
@@ -22,7 +23,8 @@ AOIWorld::AOIWorld(int startX, int endX, int startY, int endY, int xCount, int y
 
     m_gridList.resize(m_totalGrid);
 
-    dGrid = {-m_xCount, -m_xCount + 1, 1, m_xCount + 1, m_xCount, m_xCount -1, -1, -m_xCount - 1};
+    // 周围9个位置(包括本网格)
+    dGrid = {-m_xCount, -m_xCount + 1, 1, m_xCount + 1, m_xCount, m_xCount -1, -1, -m_xCount - 1, 0};
 }
 
 AOIWorld::~AOIWorld() {
@@ -34,8 +36,10 @@ void AOIWorld::addAOIPlayer(Player* player) {
 
     // 获得该玩家所在的网格id  
     int grid_id = calPlayerGrid(player->getX(), player->getY());
+    //std::cout << "addAOIPlayer:" << "x:" << player->getX() << " y:" << player->getY() << std::endl;
     // 向该网格中添加元素
     m_gridList[grid_id].addPlayer(player);
+   // std::cout << "addAOIPlayer大小: " << m_gridList[grid_id].getAllPlayers().size() << std::endl;
 }
 
 
@@ -57,8 +61,8 @@ std::list<Player*> AOIWorld::getAroundPlayer(Player* player) {
 
     std::list<Player*> result_players;
 
-    // 周围8个相邻网格玩家的信息
-    for(int i = 0; i < 8; ++i) {
+    // 周围9个相邻网格玩家的信息(包括自己所在网格)
+    for(int i = 0; i < 9; ++i) {
         int pgrid = grid_id + dGrid[i];
         
         // 超过范围
@@ -71,6 +75,7 @@ std::list<Player*> AOIWorld::getAroundPlayer(Player* player) {
         result_players.splice(result_players.end(), tmp_players);
 
     }
+    
 
     return result_players;
 }
@@ -93,7 +98,9 @@ void Grid::addPlayer(Player* player) {
 // 删除玩家
 void Grid::removePlayer(Player* player) {
 
+    std::cout << "删除玩家成功" << "name:" << player->getName() << std::endl; 
     m_playerList.remove(player);
+    
 }
 
 // 获得所有玩家
