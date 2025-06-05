@@ -185,6 +185,7 @@ GameData* GameRole::createAroundPos() {
         tmpPlayer->mutable_p()->set_v(tmpRole->getCliV());
         // 多余值
         tmpPlayer->mutable_p()->set_bloodvalue(0);
+
         
     }
 
