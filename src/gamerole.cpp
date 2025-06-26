@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <random>
 
-
+static bool Debug = false;
 
 // 创建唯一时间定时器对象
 static ZinxTimer* zinx_timer = new ZinxTimer();
@@ -81,11 +81,13 @@ UserData* GameRole::ProcMsg(UserData& _poUserData)
 
    for(const auto& pmsg : multidata.getGameDataLists()) {
 
-        char buf[1024] = {0};
-        sprintf(buf, "id:%d name:%s 消息类型:%d 消息:\n%s血量:%lf", 
-        m_pid, m_name.c_str(), pmsg->getMsgType(), pmsg->getMessage()->Utf8DebugString().c_str(), m_blood);
-        
-        std::cout << buf << std::endl;
+        if(Debug) {
+            char buf[1024] = {0};
+            sprintf(buf, "id:%d name:%s 消息类型:%d 消息:\n%s血量:%lf", 
+            m_pid, m_name.c_str(), pmsg->getMsgType(), pmsg->getMessage()->Utf8DebugString().c_str(), m_blood);
+            
+            std::cout << buf << std::endl;
+        }
 
         auto pit = this->getHandler(pmsg->getMsgType());
         pit(pmsg);
@@ -169,7 +171,9 @@ Handler GameRole::getHandler(Game::MsgType type) {
     auto pit = m_handlerLists.find(type);
     if(pit == m_handlerLists.end()) {
 
-        std::cout << "没有找到相关处理函数" << "type:" << type  << std::endl;
+        if(Debug) {
+             std::cout << "没有找到相关处理函数" << "type:" << type  << std::endl;
+        }
         return [](GameData*){};
     }
 
@@ -218,11 +222,6 @@ GameData* GameRole::createAroundPos() {
 
         // 将获取到的周围玩家动态转换
         auto tmpRole = dynamic_cast<GameRole*>(player);
-
-        // if(tmpRole == this) {
-        //     // 除了自己
-        //     continue;
-        // }
 
         // 每个消息对象
         auto tmpPlayer = pPlayers->add_ps();
@@ -346,7 +345,6 @@ void GameRole::sendChatContent(GameData*data) {
 // 专门处理移动位置的函数
 void GameRole::movePosition(GameData* data) {
 
-    std::cout << "移动位置消息函数" << std::endl;
     
     // 获得新位置
     auto pPos = dynamic_cast<Game::Position*>(data->getMessage());

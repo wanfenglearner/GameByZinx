@@ -180,7 +180,6 @@ void Grid::addPlayer(Player* player) {
 // 删除玩家
 void Grid::removePlayer(Player* player) {
 
-    std::cout << "删除玩家成功" << "name:" << player->getName() << std::endl; 
     m_playerList.remove(player);
     
 }
