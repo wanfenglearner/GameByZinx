@@ -1,5 +1,7 @@
 bin/*
 !bin/.gitkeep
+!bin/lastname.txt
+!bin/firstname.txt
 build/*
 !build/.gitkeep
 .vscode/
